@@ -1,0 +1,52 @@
+name: render
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+concurrency:
+  group: render
+  cancel-in-progress: true
+env:
+  HYPERFRAMES_NO_TELEMETRY: "1"
+  DO_NOT_TRACK: "1"
+  HYPERFRAMES_NO_UPDATE_CHECK: "1"
+  HYPERFRAMES_SKIP_SKILLS: "1"
+  HYPERFRAMES_AGENT: "1"
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [promo-en, promo-de, loop, explainer-en, explainer-de]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+      - name: Tools (pinned)
+        run: npm i --no-save --no-package-lock hyperframes@0.9.21 gsap@3.12.5 @fontsource/bodoni-moda@5.2.7 @fontsource/manrope@5.2.8
+      - run: node tools/build.mjs ${{ matrix.target }}
+      - name: Lint and check
+        continue-on-error: true
+        working-directory: dist/${{ matrix.target }}
+        run: |
+          mkdir -p ../../out
+          $GITHUB_WORKSPACE/node_modules/.bin/hyperframes lint . 2>&1 | tee ../../out/${{ matrix.target }}-lint.txt || true
+          $GITHUB_WORKSPACE/node_modules/.bin/hyperframes check . --json --no-contrast --budget 120s > ../../out/${{ matrix.target }}-check.json 2>../../out/${{ matrix.target }}-check.err || true
+          tail -c 3000 ../../out/${{ matrix.target }}-check.json || true
+      - name: Render
+        working-directory: dist/${{ matrix.target }}
+        run: $GITHUB_WORKSPACE/node_modules/.bin/hyperframes render --output $GITHUB_WORKSPACE/out/${{ matrix.target }}.mp4 --quality high --fps 30 --workers 2
+      - name: Contact sheet and beat frames
+        run: |
+          f=out/${{ matrix.target }}.mp4
+          d=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")
+          ffprobe -v error -show_entries stream=width,height,r_frame_rate,nb_frames -of compact "$f" | tee out/${{ matrix.target }}-probe.txt
+          ffmpeg -v error -i "$f" -vf "fps=12/$d,scale=-2:420,tile=12x1" -frames:v 1 -q:v 4 -y out/${{ matrix.target }}-sheet.jpg
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: out/
+          retention-days: 7

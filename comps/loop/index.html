@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Beatlot loop 1:1</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="kit.css">
+<script src="gsap.min.js"></script>
+<script src="kit.js"></script>
+<style>
+#root { width: 1080px; height: 1080px; background: var(--ink); }
+#glow { opacity: .6; position: absolute; left: 50%; top: 46%; width: 1300px; height: 1300px; margin: -650px 0 0 -650px; border-radius: 50%; background: radial-gradient(closest-side, rgba(217,179,106,.22), rgba(217,179,106,0)); }
+#gf { left: 304px; top: 46px; width: 472px; height: 840px; }
+#ph { left: 9px; top: 9px; right: 9px; bottom: 9px; }
+#ph .brandtag { top: 24px; font-size: 13px; letter-spacing: .32em; }
+#ph .endcard { padding: 0 16px 22%; gap: 10px; }
+#ph .endcard .lg { width: 150px; height: 90px; border-radius: 10px; overflow: hidden; }
+#ph .endcard .lg svg { width: 100%; height: 100%; display: block; }
+#ph .endcard b { font-family: 'Bodoni Moda', serif; font-size: 34px; font-weight: 600; }
+#ph .endcard .ln { width: 46px; height: 2px; }
+#ph .endcard .cta { font-size: 21px; }
+#ph .endcard small { font-size: 18px; }
+#mt { left: 314px; top: 912px; }
+/* raw clips waiting on the left; checks on the right */
+.raw { position: absolute; left: 92px; width: 150px; height: 266px; border-radius: 14px; overflow: hidden; box-shadow: 0 20px 40px -18px rgba(0,0,0,.9); border: 2px solid rgba(243,236,223,.12); }
+.raw img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.8) contrast(.92) brightness(1.02); }
+.raw i { position: absolute; left: 10px; top: 10px; width: 10px; height: 10px; border-radius: 50%; background: #e5484d; }
+.wire { position: absolute; left: 244px; width: 58px; height: 2px; background: rgba(217,179,106,.25); overflow: hidden; }
+.wire b { opacity: 0; position: absolute; top: -1px; left: 0; width: 18px; height: 4px; border-radius: 2px; background: #FFE6AE; box-shadow: 0 0 10px 2px rgba(255,214,140,.7); }
+.ok { position: absolute; left: 834px; width: 76px; height: 76px; color: var(--gold-hi); }
+.ok svg { width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="loop" data-start="0" data-duration="7.619" data-width="1080" data-height="1080" data-fps="30">
+  <div id="glow"></div>
+  <div class="raw" style="top:166px;transform:rotate(-5deg)"><img src="assets/img/clip-grille.jpg" alt=""><i></i></div>
+  <div class="raw" style="top:420px;transform:rotate(3deg)"><img src="assets/img/clip-wheel.jpg" alt=""><i></i></div>
+  <div class="raw" style="top:674px;transform:rotate(-2deg)"><img src="assets/img/clip-front.jpg" alt=""><i></i></div>
+  <div class="wire" style="top:298px"><b></b></div>
+  <div class="wire" style="top:552px"><b></b></div>
+  <div class="wire" style="top:806px"><b></b></div>
+  <div class="gframe" id="gf">
+    <div class="phone" id="ph">
+      <div class="shot"><img src="assets/img/grille.jpg" alt=""></div>
+      <div class="shot"><img src="assets/img/wheel.jpg" alt=""></div>
+      <div class="shot"><img src="assets/img/c-class-34.jpg" alt=""></div>
+      <div class="shot"><img src="assets/img/e-class.jpg" alt=""></div>
+      <div class="brandtag" id="btag"></div>
+      <div class="flash" id="fl"></div>
+      <div class="endcard" id="ec"><span class="lg" id="eclogo"></span><b id="ecname"></b><i class="ln"></i><span class="cta">DM for details</span><small id="echandle"></small></div>
+    </div>
+  </div>
+  <div class="meter" id="mt"></div>
+  <div class="ok" style="top:330px"></div>
+  <div class="ok" style="top:470px"></div>
+  <div class="ok" style="top:610px"></div>
+</div>
+<script>
+(function () {
+  var K = window.KIT, B = K.B, $ = K.$, $$ = K.$$, L = K.LOGOS.kestrel;
+  $('#gf').insertAdjacentHTML('afterbegin', K.EDGES);
+  $('#btag').textContent = L.name;
+  $('#eclogo').innerHTML = L.svg; $('#ecname').textContent = L.name; $('#echandle').textContent = L.handle;
+  $$('.ok').forEach(function (o) { o.innerHTML = K.CHK; });
+  var M = K.meter($('#mt'), { width: 452, bars: 32, gap: 4, waveH: 40, gapY: 10, tick: 9, dot: 15 });
+  var tl = gsap.timeline({ paused: true });
+  tl.set({}, {}, B(16));
+  K.frameDrawn(tl, '#gf');
+  var shots = $$('#ph .shot');
+  for (var r = 0; r < 16; r++) M.step(tl, r, r, r === 8 ? 1.5 : 1.22);
+  // the raw clips feed the frame, one per beat
+  $$('.wire b').forEach(function (w, i) { tl.fromTo(w, { x: -20, opacity: 1 }, { x: 60, opacity: 0, duration: B(.6), ease: 'power2.in', immediateRender: i === 0 }, B(i)); });
+  $$('.raw').forEach(function (c, i) { tl.fromTo(c, { borderColor: 'rgba(217,179,106,.9)' }, { borderColor: 'rgba(243,236,223,.12)', duration: B(.9), immediateRender: i === 0 }, B(i)); });
+  K.cut(tl, shots, 0, 0, 2, 1.22, 1.1);
+  K.cut(tl, shots, 1, 2, 2, 1.2, 1.08);
+  K.cut(tl, shots, 2, 4, 1, 2.3, 2.15, '16% 63%');
+  K.cut(tl, shots, 0, 5, 1, 2.1, 1.95, '48% 44%');
+  K.cut(tl, shots, 1, 6, 1, 1.9, 1.78, '56% 70%');
+  K.cut(tl, shots, 3, 7, 1, 2.5, 2.3, '50% 63%');
+  K.cut(tl, shots, 2, 8, 4, 1.16, 1);
+  tl.fromTo('#fl', { opacity: 1 }, { opacity: 0, duration: B(1), ease: 'power2.out', immediateRender: false }, B(8));
+  tl.fromTo('#gf', { scale: 1.045 }, { scale: 1, duration: B(.6), ease: 'back.out(3)', immediateRender: false }, B(8));
+  tl.fromTo('#glow', { scale: 1.3, opacity: 1 }, { scale: 1, opacity: .7, duration: B(3), ease: 'power2.out', immediateRender: false }, B(8));
+  $$('.ok').forEach(function (o, i) {
+    tl.fromTo(o, { opacity: 0, scale: .3 }, { opacity: 1, scale: 1, duration: B(.6), ease: 'back.out(3)' }, B(9 + i));
+    tl.to(o, { opacity: 0, duration: B(.8) }, B(14.6));
+  });
+  tl.fromTo('#ec', { opacity: 0 }, { opacity: 1, duration: B(.5) }, B(12));
+  tl.fromTo($$('#ec > *'), { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: B(.6), stagger: B(.2), ease: 'power3.out' }, B(12));
+  // the last beat dissolves into the first frame, so the loop has no seam
+  tl.to('#ec', { opacity: 0, duration: B(1), ease: 'power1.inOut' }, B(15));
+  tl.set(shots[2], { opacity: 0 }, B(15));
+  tl.fromTo(shots[0], { opacity: 0 }, { opacity: 1, duration: B(1), ease: 'power1.inOut', immediateRender: false }, B(15));
+  tl.set($('img', shots[0]), { scale: 1.22, transformOrigin: '50% 50%' }, B(15));
+  tl.fromTo('#glow', { opacity: .7 }, { opacity: .6, duration: B(1), immediateRender: false }, B(15));
+  window.__timelines = window.__timelines || {};
+  window.__timelines.loop = tl;
+})();
+</script>
+</body>
+</html>

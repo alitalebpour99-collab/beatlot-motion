@@ -1,0 +1,61 @@
+/* Beatlot motion kit: the site's signature, at video size. Fonts come from fonts.css (build.mjs). */
+:root {
+  --cream: #F3ECDF; --paper: #FBF7EF; --sand: #E7DCC8;
+  --ink: #0D0C0A; --ink-2: #16140F; --ink-3: #1D1A14;
+  --gold: #B88A3E; --gold-hi: #D9B36A; --gold-lo: #8A6526;
+  --on-dark: #F3ECDF; --mute-d: rgba(243, 236, 223, .62); --mute: rgba(13, 12, 10, .62);
+  --d-bg: #121110; --d-ink: #F1E7D6; --d-acc: #C9A24A;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--cream); overflow: hidden; }
+#root { position: relative; overflow: hidden; isolation: isolate; font-family: 'Manrope', system-ui, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+.disp { font-family: 'Bodoni Moda', 'Didot', serif; font-weight: 500; letter-spacing: -.012em; }
+.abs { position: absolute; }
+.w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
+.w > span { display: inline-block; }
+
+/* the gold gallery frame: four edges, four diamond corners */
+.gframe { position: absolute; }
+.gframe > .edges { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.edges path { fill: none; stroke: var(--gold-hi); stroke-width: 3; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.cn { position: absolute; width: 16px; height: 16px; border: 2px solid var(--gold-hi); background: var(--ink); }
+.cn.tl { left: -8px; top: -8px; } .cn.tr { right: -8px; top: -8px; } .cn.br { right: -8px; bottom: -8px; } .cn.bl { left: -8px; bottom: -8px; }
+
+/* a Reel screen inside a frame */
+.phone { position: absolute; overflow: hidden; background: #050505; border-radius: 10px; }
+.shot { position: absolute; inset: 0; overflow: hidden; opacity: 0; }
+.shot img { position: absolute; left: 0; bottom: 0; width: 100%; height: 116%; object-fit: cover; object-position: center bottom; filter: contrast(1.06) saturate(1.05) sepia(.05); }
+.flash { position: absolute; inset: 0; opacity: 0; background: radial-gradient(circle at 50% 55%, rgba(255,236,190,.95), rgba(217,179,106,.6) 40%, rgba(217,179,106,0) 75%); mix-blend-mode: screen; z-index: 6; }
+.brandtag { position: absolute; left: 0; right: 0; text-align: center; font-weight: 700; text-transform: uppercase; color: var(--d-acc); z-index: 5; }
+.pill { position: absolute; left: 50%; white-space: nowrap; font-weight: 700; color: #fff; background: rgba(10,9,7,.74); border: 2px solid var(--d-acc); border-radius: 999px; z-index: 5; }
+.endcard { position: absolute; inset: 0; z-index: 4; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; text-align: center; background: linear-gradient(180deg, rgba(0,0,0,0) 18%, var(--d-bg) 66%); color: var(--d-ink); opacity: 0; }
+.endcard .ln { display: block; background: var(--d-acc); }
+.endcard .cta { font-weight: 700; color: var(--d-acc); }
+.endcard small { opacity: .8; }
+
+/* the beat line: 16 ticks, a dot that jumps on each beat, a wave that lights up to the dot */
+.meter { position: absolute; }
+.wave { display: flex; align-items: center; transform-origin: center; }
+.wave i { flex: 1; border-radius: 3px; background: rgba(243,236,223,.18); }
+.grid { position: relative; }
+.grid .base { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(217,179,106,.4); }
+.grid .tk { position: absolute; bottom: 0; width: 2px; background: rgba(217,179,106,.5); }
+.grid .tk.bar { background: rgba(217,179,106,.8); }
+.grid .tk.drop { width: 3px; background: var(--gold-hi); }
+.grid .dot { position: absolute; left: 0; border-radius: 50%; background: #FFE6AE; box-shadow: 0 0 16px 4px rgba(255,214,140,.7); }
+
+/* chat */
+.card-dark { background: var(--ink); color: var(--on-dark); border: 2px solid rgba(217,179,106,.28); }
+.msg { width: fit-content; max-width: 86%; }
+.me { margin-left: auto; background: #2B261D; }
+.bot { background: var(--ink-2); border: 2px solid rgba(217,179,106,.2); }
+.chip { display: inline-block; font-weight: 600; border: 2px solid rgba(217,179,106,.45); color: var(--gold-hi); border-radius: 999px; white-space: nowrap; }
+.row { overflow: hidden; height: 0; opacity: 0; flex: 0 0 auto; }
+.typing { display: flex; }
+.typing i { border-radius: 50%; background: var(--gold-hi); opacity: .45; }
+.q { display: inline-flex; align-items: center; color: var(--mute-d); }
+.q svg { color: var(--gold-hi); }
+.acts button { font: inherit; display: inline-flex; align-items: center; font-weight: 600; border-radius: 999px; border: 2px solid rgba(217,179,106,.45); color: var(--on-dark); background: none; }
+.acts small { font-weight: 600; color: var(--gold-hi); opacity: .85; }
+.acts .ok { background: var(--gold-hi); color: var(--ink); border-color: var(--gold-hi); }
+.ch { opacity: 0; }

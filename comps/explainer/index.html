@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Beatlot explainer 16:9</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="kit.css">
+<script src="gsap.min.js"></script>
+<script src="kit.js"></script>
+<style>
+#root { width: 1920px; height: 1080px; background: var(--cream); }
+#glow { position: absolute; left: 1410px; top: 520px; width: 1500px; height: 1500px; margin: -750px 0 0 -750px; border-radius: 50%; background: radial-gradient(closest-side, rgba(217,179,106,.3), rgba(217,179,106,0)); opacity: .8; }
+#brand { position: absolute; left: 140px; top: 64px; display: flex; align-items: center; gap: 14px; color: var(--gold); }
+#brand svg { width: 44px; height: 44px; }
+#brand b { font-family: 'Bodoni Moda', serif; font-weight: 600; font-size: 34px; color: var(--ink); }
+/* left column: one block per section, swapped on the beat */
+.blk { position: absolute; left: 140px; top: 250px; width: 800px; }
+.kick { display: flex; align-items: center; gap: 18px; font-size: 22px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--gold-lo); }
+.kick .n { font-family: 'Bodoni Moda', serif; font-size: 28px; letter-spacing: 0; color: var(--gold); }
+.kick::after { content: ''; width: 80px; height: 2px; background: rgba(184,138,62,.42); }
+.blk h2 { font-family: 'Bodoni Moda', serif; font-weight: 500; letter-spacing: -.012em; font-size: 104px; line-height: 1.02; margin-top: 26px; }
+.blk h2 em { font-style: italic; color: var(--gold); }
+.blk p { font-size: 34px; line-height: 1.45; color: var(--mute); margin-top: 30px; max-width: 720px; }
+/* the 16-bar line under everything: one tick per bar, the dot jumps on each bar */
+#rail { position: absolute; left: 140px; top: 1000px; width: 1640px; height: 2px; background: rgba(184,138,62,.22); }
+#rail .fill { position: absolute; left: 0; top: 0; height: 2px; width: 100%; background: var(--gold); transform-origin: left; transform: scaleX(0); }
+#rail .tk { position: absolute; top: -7px; width: 2px; height: 16px; background: rgba(184,138,62,.6); }
+#rail .tk.big { top: -12px; height: 26px; background: var(--gold); }
+#rail .lb { position: absolute; top: -52px; transform: translateX(-50%); font-family: 'Bodoni Moda', serif; font-size: 24px; color: var(--gold); }
+#rail .dot { position: absolute; top: -8px; left: -9px; width: 18px; height: 18px; border-radius: 50%; background: var(--paper); border: 3px solid var(--gold); }
+/* right stage */
+#chat { position: absolute; left: 1040px; top: 90px; width: 740px; height: 840px; border-radius: 44px; overflow: hidden; box-shadow: 0 50px 100px -50px rgba(13,12,10,.8); }
+.head { position: absolute; left: 0; right: 0; top: 0; height: 104px; display: flex; align-items: center; gap: 18px; padding: 0 30px; border-bottom: 2px solid rgba(217,179,106,.14); }
+.av { width: 62px; height: 62px; border-radius: 50%; display: grid; place-items: center; background: var(--ink-3); border: 2px solid rgba(217,179,106,.35); color: var(--gold-hi); }
+.av svg { width: 36px; height: 36px; }
+.who b { display: block; font-family: 'Bodoni Moda', serif; font-size: 34px; font-weight: 600; line-height: 1.1; }
+.who small { display: flex; align-items: center; gap: 8px; font-size: 21px; color: var(--mute-d); }
+.who small i { width: 10px; height: 10px; border-radius: 50%; background: #7fbf8a; }
+#body { position: absolute; left: 0; right: 0; top: 104px; bottom: 0; padding: 24px 26px 30px; display: flex; flex-direction: column; justify-content: flex-end; gap: 18px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 70px); mask-image: linear-gradient(180deg, transparent 0, #000 70px); }
+.msg { font-size: 28px; line-height: 1.45; padding: 16px 24px; border-radius: 30px; }
+.me { border-bottom-right-radius: 10px; } .bot { border-bottom-left-radius: 10px; }
+.clips3 { display: flex; gap: 12px; padding: 12px; }
+.clips3 div { width: 132px; height: 212px; border-radius: 14px; overflow: hidden; }
+.clips3 img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.82) contrast(.92) brightness(1.04); }
+.voice { display: flex; align-items: center; gap: 14px; }
+.voice .pl { width: 40px; height: 40px; border-radius: 50%; background: var(--gold-hi); display: grid; place-items: center; }
+.voice .pl::before { content: ''; border-left: 12px solid var(--ink); border-top: 8px solid transparent; border-bottom: 8px solid transparent; margin-left: 4px; }
+.voice .vb { display: flex; align-items: center; gap: 4px; height: 34px; }
+.voice .vb i { width: 4px; background: var(--gold-hi); border-radius: 2px; opacity: .85; }
+.voice small { font-size: 22px; color: var(--mute-d); }
+.typing { gap: 9px; padding: 24px 26px; } .typing i { width: 12px; height: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.chip { font-size: 23px; padding: 5px 16px; }
+.zero { margin-top: 12px; font-size: 22px; color: var(--gold-hi); display: flex; align-items: center; gap: 10px; }
+.zero i { width: 22px; height: 22px; border-radius: 50%; border: 2px dashed var(--gold-hi); }
+/* step 3: the Reel, big */
+#reel { position: absolute; left: 1040px; top: 70px; width: 740px; height: 880px; }
+#gf { left: 30px; top: 0; width: 420px; height: 747px; }
+#ph { left: 8px; top: 8px; right: 8px; bottom: 8px; }
+#ph .brandtag { top: 22px; font-size: 12px; letter-spacing: .32em; }
+#ph .endcard { padding: 0 14px 22%; gap: 9px; }
+#ph .endcard .lg { width: 130px; height: 78px; border-radius: 9px; overflow: hidden; }
+#ph .endcard .lg svg { width: 100%; height: 100%; display: block; }
+#ph .endcard b { font-family: 'Bodoni Moda', serif; font-size: 30px; font-weight: 600; }
+#ph .endcard .ln { width: 40px; height: 2px; }
+#ph .endcard .cta { font-size: 19px; }
+#ph .endcard small { font-size: 16px; }
+#mt { left: 40px; top: 772px; }
+#mt .wave i { background: rgba(13,12,10,.14); }
+.side { position: absolute; left: 500px; width: 240px; }
+.q { display: flex; align-items: center; gap: 12px; font-size: 27px; color: var(--ink); margin-bottom: 22px; font-weight: 600; }
+.q svg { width: 34px; height: 34px; color: var(--gold); flex: none; }
+.okb { display: inline-flex; align-items: center; justify-content: center; font-size: 27px; font-weight: 700; color: var(--ink); background: var(--gold-hi); border-radius: 999px; padding: 16px 34px; margin-top: 16px; position: relative; }
+.okb i { position: absolute; inset: -9px; border-radius: 999px; box-shadow: 0 0 0 9px rgba(217,179,106,.3); opacity: 0; }
+/* brand kit */
+#kit { position: absolute; left: 1040px; top: 90px; width: 740px; height: 840px; }
+#kitchat { position: absolute; left: 0; top: 0; width: 740px; height: 330px; border-radius: 36px; padding: 26px; }
+#logobox { position: absolute; left: 26px; top: 26px; width: 300px; height: 180px; border-radius: 16px; overflow: hidden; background: #fff; }
+#logobox svg { width: 100%; height: 100%; display: block; }
+#scan { position: absolute; left: 26px; top: 26px; width: 4px; height: 180px; background: var(--gold-hi); box-shadow: 0 0 20px 6px rgba(255,214,140,.7); opacity: 0; }
+#kitme { position: absolute; left: 26px; top: 222px; font-size: 24px; color: var(--mute-d); }
+.sws { position: absolute; left: 380px; top: 40px; display: flex; gap: 22px; }
+.sw { width: 96px; text-align: center; }
+.sw i { display: block; width: 82px; height: 82px; margin: 0 auto 10px; border-radius: 50%; border: 2px solid rgba(243,236,223,.25); background: #2a261f; }
+.sw b { display: block; font-family: ui-monospace, Menlo, monospace; font-size: 19px; color: var(--on-dark); }
+.sw small { font-size: 18px; color: var(--mute-d); }
+.tpl { position: absolute; top: 380px; width: 250px; height: 444px; }
+.tpl .gframe { inset: 0; }
+.tpl .gframe .edges path { stroke: var(--d-acc); }
+.tpl .cn { border-color: var(--d-acc); }
+.mph { position: absolute; inset: 7px; border-radius: 8px; overflow: hidden; background: #111; }
+.mph img { position: absolute; left: 0; bottom: 0; width: 100%; height: 116%; object-fit: cover; object-position: center bottom; }
+.lt { position: absolute; left: 12px; right: 12px; bottom: 14%; padding: 12px 14px; border-radius: 6px; background: var(--d-bg); color: var(--d-ink); border-left: 5px solid var(--d-acc); }
+.lt span { display: block; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--d-acc); font-weight: 700; }
+.lt b { display: block; font-family: 'Bodoni Moda', serif; font-size: 22px; font-weight: 600; }
+.ecm { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: var(--d-bg); color: var(--d-ink); text-align: center; }
+.ecm .lg { width: 84%; aspect-ratio: 200/120; border-radius: 10px; overflow: hidden; }
+.ecm .lg svg { width: 100%; height: 100%; display: block; }
+.ecm b { font-family: 'Bodoni Moda', serif; font-size: 26px; font-weight: 600; }
+.ecm span { font-size: 18px; font-weight: 700; color: var(--d-acc); }
+.ecm .ln { width: 36px; height: 2px; background: var(--d-acc); }
+/* pricing */
+#price { position: absolute; left: 1040px; top: 110px; width: 760px; height: 820px; }
+.plan { position: absolute; top: 80px; width: 232px; height: 470px; background: var(--paper); border-radius: 6px; padding: 30px 24px; border: 2px solid rgba(184,138,62,.2); }
+.plan .pn { font-size: 20px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-lo); }
+.plan .amt { font-family: 'Bodoni Moda', serif; font-size: 84px; line-height: 1; margin-top: 26px; display: flex; align-items: baseline; }
+.plan .amt small { font-family: 'Manrope', sans-serif; font-size: 20px; color: var(--mute); margin-left: 6px; }
+.plan .rl { font-size: 28px; font-weight: 700; margin-top: 18px; }
+.plan ul { list-style: none; margin-top: 22px; font-size: 20px; line-height: 1.4; color: var(--mute); }
+.plan li { margin-bottom: 10px; padding-left: 20px; position: relative; }
+.plan li::before { content: ''; position: absolute; left: 0; top: .55em; width: 8px; height: 8px; transform: rotate(45deg); background: var(--gold); }
+#pfr { position: absolute; top: 80px; width: 232px; height: 470px; }
+#pfr .edges path { stroke: var(--gold); }
+#pfr .cn { border-color: var(--gold); background: var(--cream); }
+#need { position: absolute; top: 14px; font-size: 24px; font-weight: 700; color: var(--ink); background: var(--gold-hi); border-radius: 999px; padding: 6px 18px; }
+.toks { position: absolute; top: 600px; left: 0; width: 760px; display: flex; gap: 18px; }
+.tok { flex: 1; text-align: center; border: 2px solid rgba(184,138,62,.42); border-radius: 20px; padding: 18px 10px; }
+.coins { display: flex; justify-content: center; height: 32px; align-items: center; margin-bottom: 10px; }
+.coins i { width: 28px; height: 28px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #F4DDA6, var(--gold) 70%); border: 1px solid var(--gold-lo); margin-left: -8px; }
+.coins i:first-child { margin-left: 0; }
+.coins .z { width: 28px; height: 28px; border-radius: 50%; border: 2px dashed var(--gold); }
+.tok b { display: block; font-size: 24px; } .tok small { font-size: 20px; color: var(--mute); }
+/* the end */
+#end { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding-bottom: 60px; }
+#emark { width: 110px; height: 110px; color: var(--gold); }
+#emark svg { width: 100%; height: 100%; }
+#emark .mk { stroke-dasharray: 1; stroke-dashoffset: 1; }
+#ename { font-size: 170px; line-height: 1; margin-top: 8px; }
+#etag { font-size: 54px; margin-top: 26px; }
+#etag em { font-style: italic; color: var(--gold); }
+#ecta { display: inline-flex; align-items: center; gap: 14px; margin-top: 46px; background: var(--ink); color: var(--cream); font-size: 30px; font-weight: 600; padding: 24px 44px; border-radius: 999px; }
+#ecta svg { width: 34px; height: 34px; color: var(--gold-hi); }
+#esub { font-size: 26px; color: var(--mute); margin-top: 22px; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="explainer" data-start="0" data-duration="30.476" data-width="1920" data-height="1080" data-fps="30">
+  <div id="glow"></div>
+  <div id="brand"><span id="bmark"></span><b>Beatlot</b></div>
+
+  <div class="blk" id="b0"><div class="kick" id="k0"></div><h2 id="h0"></h2></div>
+  <div class="blk" id="b1"><div class="kick"><span class="n">01</span><span id="k1"></span></div><h2 id="h1"></h2><p id="p1"></p></div>
+  <div class="blk" id="b2"><div class="kick"><span class="n">02</span><span id="k2"></span></div><h2 id="h2"></h2><p id="p2"></p></div>
+  <div class="blk" id="b3"><div class="kick"><span class="n">03</span><span id="k3"></span></div><h2 id="h3"></h2><p id="p3"></p></div>
+  <div class="blk" id="b4"><div class="kick" id="k4"></div><h2 id="h4"></h2><p id="p4"></p></div>
+  <div class="blk" id="b5"><div class="kick" id="k5"></div><h2 id="h5"></h2><p id="p5"></p></div>
+
+  <div id="chat" class="card-dark">
+    <div class="head"><span class="av"></span><div class="who"><b>Beatlot</b><small><i></i><span id="status"></span></small></div></div>
+    <div id="body">
+      <div class="row" id="r1"><div class="msg me clips3"><div><img src="assets/img/clip-grille.jpg" alt=""></div><div><img src="assets/img/clip-wheel.jpg" alt=""></div><div><img src="assets/img/clip-front.jpg" alt=""></div></div></div>
+      <div class="row" id="r2"><div class="msg me voice"><span class="pl"></span><span class="vb" id="vb"></span><small id="vtxt"></small></div></div>
+      <div class="row" id="r3"><div class="msg me" id="say"></div></div>
+      <div class="row" id="r4"><div class="msg bot typing" id="dots"><i></i><i></i><i></i></div></div>
+      <div class="row" id="r5"><div class="msg bot"><div id="plan"></div><div class="chips" id="chips"></div><div class="zero"><i></i><span id="zero"></span></div></div></div>
+    </div>
+  </div>
+
+  <div id="reel">
+    <div class="gframe" id="gf">
+      <div class="phone" id="ph">
+        <div class="shot"><img src="assets/img/c-class-34.jpg" alt=""></div>
+        <div class="shot"><img src="assets/img/e-class.jpg" alt=""></div>
+        <div class="shot"><img src="assets/img/g80-sign.jpg" alt=""></div>
+        <div class="brandtag" id="btag"></div>
+        <div class="flash" id="fl"></div>
+        <div class="endcard" id="ec"><span class="lg" id="eclogo"></span><b id="ecname"></b><i class="ln"></i><span class="cta" id="eccta"></span><small id="echandle"></small></div>
+      </div>
+    </div>
+    <div class="meter" id="mt"></div>
+    <div class="side" style="top:170px"><div id="qa"></div><span class="okb" id="okb"><i></i><span id="oktxt"></span></span></div>
+  </div>
+
+  <div id="kit">
+    <div id="kitchat" class="card-dark"></div>
+    <div id="logobox"></div><i id="scan"></i>
+    <div id="kitme"></div>
+    <div class="sws" id="sws"></div>
+    <div class="tpl" style="left:60px"><div class="gframe" id="t1"><div class="mph"><img src="assets/img/c-class-34.jpg" alt=""><div class="lt"><span class="dn"></span><b>Mercedes-Benz C-Class</b></div></div></div></div>
+    <div class="tpl" style="left:430px"><div class="gframe" id="t2"><div class="mph ecm"><span class="lg dl"></span><b class="dn"></b><i class="ln"></i><span id="tcta"></span></div></div></div>
+  </div>
+
+  <div id="price">
+    <div id="need"></div>
+    <div class="plan" style="left:0"><div class="pn" id="pn1"></div><div class="amt"><span class="pre"></span><span id="o1"></span><span class="suf"></span><small class="per"></small></div><div class="rl" id="rl1"></div><ul id="f1"></ul></div>
+    <div class="plan" style="left:264px"><div class="pn" id="pn2"></div><div class="amt"><span class="pre"></span><span id="o2"></span><span class="suf"></span><small class="per"></small></div><div class="rl" id="rl2"></div><ul id="f2"></ul></div>
+    <div class="plan" style="left:528px"><div class="pn" id="pn3"></div><div class="amt"><span class="pre"></span><span id="o3"></span><span class="suf"></span><small class="per"></small></div><div class="rl" id="rl3"></div><ul id="f3"></ul></div>
+    <div class="gframe" id="pfr" style="left:264px"></div>
+    <div class="toks" id="toks"></div>
+  </div>
+
+  <div id="end">
+    <div id="emark"></div>
+    <div id="ename" class="disp">Beatlot</div>
+    <div id="etag" class="disp"></div>
+    <div><span id="ecta"></span></div>
+    <div id="esub"></div>
+  </div>
+
+  <div id="rail"><i class="fill"></i><i class="dot" id="rdot"></i></div>
+</div>
+<script>
+(function () {
+  var LANG = '__LANG__'.indexOf('__') === 0 ? 'en' : '__LANG__';
+  var T = {
+    en: { k0: 'How it works', h0: 'Three messages. <em>That is the whole job.</em>',
+      k1: 'Send clips', h1: 'Send clips', p1: 'Straight from your phone, in Telegram or the web chat. Voice notes work too.', voice: 'Voice note',
+      k2: 'Say what you want', h2: 'Say what you want', p2: 'Plain words are enough. You see the plan before any credit is spent.', say: 'Shorter and warmer. Show the car on the drop.',
+      plan: 'Here is the plan:', chips: ['8 seconds', 'Warm look', 'Reveal in bar 3'], zero: 'Nothing spent yet',
+      k3: 'Get Reels', h3: 'Get Reels', p3: 'Cut on the beat, in your colours, checked. Approve with one tap.', qa: ['beat sync', 'plates', 'logo'], ok: 'Approve', dm: 'DM for details',
+      k4: 'Brand kit', h4: 'Your brand, <em>automatically.</em>', p4: 'Send your logo once. We read its colours, and every Reel wears them.', me: 'Here is my logo.', sw: ['Base', 'Text', 'Accent'],
+      k5: 'Pricing', h5: 'Clear prices. <em>No demo call.</em>', p5: 'Pick a plan and talk to the assistant. That is it.',
+      need: '12 Reels a month?', per: '/ month', reels: '{n} Reels', plans: ['Starter', 'Dealer', 'Showroom'],
+      feats: [['Your brand template', 'Our own music'], ['Weekly Reel ideas', 'Captions EN + DE'], ['Several templates', 'Short listing cuts']],
+      toks: [['Approve', 'free'], ['Re-edit', '1 credit'], ['Extra Reel', '2 credits']],
+      tagA: 'Raw clips in.', tagB: 'Reels out.', cta: 'Start in Telegram', sub: 'or open the web chat. From €7 a month.', status: 'assistant, online' },
+    de: { k0: 'So geht’s', h0: 'Drei Nachrichten. <em>Mehr ist es nicht.</em>',
+      k1: 'Clips schicken', h1: 'Clips schicken', p1: 'Direkt vom Handy, in Telegram oder im Web-Chat. Sprachnachrichten gehen auch.', voice: 'Sprachnachricht',
+      k2: 'Sag, was du willst', h2: 'Sag, was du willst', p2: 'Normale Worte reichen. Du siehst den Plan, bevor ein Credit weg ist.', say: 'Kürzer und wärmer. Das Auto auf dem Drop zeigen.',
+      plan: 'Der Plan:', chips: ['8 Sekunden', 'Warmer Look', 'Enthüllung in Takt 3'], zero: 'Noch nichts abgebucht',
+      k3: 'Reels bekommen', h3: 'Reels bekommen', p3: 'Im Takt geschnitten, in deinen Farben, geprüft. Mit einem Tipp freigeben.', qa: ['im Takt', 'Kennzeichen', 'Logo'], ok: 'Freigeben', dm: 'Infos per DM',
+      k4: 'Markenkit', h4: 'Deine Marke, <em>automatisch.</em>', p4: 'Schick dein Logo einmal. Wir lesen die Farben, und jedes Reel trägt sie.', me: 'Hier ist mein Logo.', sw: ['Grund', 'Text', 'Akzent'],
+      k5: 'Preise', h5: 'Klare Preise. <em>Kein Demo-Termin.</em>', p5: 'Plan wählen und mit dem Assistenten schreiben. Fertig.',
+      need: '12 Reels im Monat?', per: '/ Monat', reels: '{n} Reels', plans: ['Starter', 'Händler', 'Showroom'],
+      feats: [['Deine Markenvorlage', 'Eigene Musik'], ['Wöchentliche Ideen', 'Captions DE + EN'], ['Mehrere Vorlagen', 'Kurzclips für Inserate']],
+      toks: [['Freigeben', 'kostenlos'], ['Neu schneiden', '1 Credit'], ['Extra-Reel', '2 Credits']],
+      tagA: 'Rohe Clips rein.', tagB: 'Reels raus.', cta: 'In Telegram starten', sub: 'oder den Web-Chat öffnen. Ab 7 € im Monat.', status: 'Assistent, online' }
+  }[LANG];
+  var K = window.KIT, B = K.B, $ = K.$, $$ = K.$$;
+  document.documentElement.lang = LANG;
+  function wordsHTML(el, html) {
+    // keep <em> parts, split every part into rising words
+    var tmp = document.createElement('div'); tmp.innerHTML = html; el.innerHTML = '';
+    Array.prototype.forEach.call(tmp.childNodes, function (n) {
+      var txt = n.textContent.trim(); if (!txt) return;
+      var host = n.nodeType === 1 ? document.createElement('em') : document.createElement('span');
+      K.words(host, txt); el.appendChild(host); el.appendChild(document.createTextNode(' '));
+    });
+    return $$('.w > span', el);
+  }
+  $('#bmark').innerHTML = K.MARK; $('.av').innerHTML = K.MARK; $('#status').textContent = T.status;
+  $('#k0').textContent = T.k0; var W0 = wordsHTML($('#h0'), T.h0);
+  var W = {};
+  [1, 2, 3].forEach(function (i) { $('#k' + i).textContent = T['k' + i]; W[i] = wordsHTML($('#h' + i), T['h' + i]); $('#p' + i).textContent = T['p' + i]; });
+  [4, 5].forEach(function (i) { $('#k' + i).textContent = T['k' + i]; W[i] = wordsHTML($('#h' + i), T['h' + i]); $('#p' + i).textContent = T['p' + i]; });
+  // rail: 16 ticks, one per bar; the three steps and the drop get the big ticks
+  var rail = $('#rail'), RW = 1640;
+  for (var k = 0; k <= 16; k++) rail.insertAdjacentHTML('beforeend', '<i class="tk' + ([2, 4, 6].indexOf(k) >= 0 ? ' big' : '') + '" style="left:' + (k / 16 * RW) + 'px"></i>');
+  [['01', 2], ['02', 4], ['03', 6]].forEach(function (x) { rail.insertAdjacentHTML('beforeend', '<span class="lb" style="left:' + (x[1] / 16 * RW) + 'px">' + x[0] + '</span>'); });
+  // chat contents
+  var vb = ''; for (var v = 0; v < 22; v++) vb += '<i style="height:' + ((.25 + .75 * Math.abs(Math.sin(v * 1.3) * Math.cos(v * .4))) * 100).toFixed(0) + '%"></i>'; $('#vb').innerHTML = vb;
+  $('#vtxt').textContent = T.voice + ' 0:07';
+  $('#say').textContent = T.say; $('#plan').textContent = T.plan; $('#zero').textContent = T.zero;
+  $('#chips').innerHTML = T.chips.map(function (c) { return '<span class="chip">' + K.esc(c) + '</span>'; }).join('');
+  // the Reel
+  var Lk = K.LOGOS.kestrel;
+  $('#gf').insertAdjacentHTML('afterbegin', K.EDGES);
+  $('#btag').textContent = Lk.name; $('#eclogo').innerHTML = Lk.svg; $('#ecname').textContent = Lk.name; $('#eccta').textContent = T.dm; $('#echandle').textContent = Lk.handle;
+  var M = K.meter($('#mt'), { width: 400, bars: 32, gap: 3, waveH: 34, gapY: 8, tick: 8, dot: 14 });
+  $('#qa').innerHTML = T.qa.map(function (q) { return '<div class="q">' + K.CHK + '<span>' + K.esc(q) + '</span></div>'; }).join('');
+  $('#oktxt').textContent = T.ok;
+  // brand kit
+  $('#logobox').innerHTML = Lk.svg; $('#kitme').textContent = T.me;
+  $('#sws').innerHTML = T.sw.map(function (s) { return '<div class="sw"><i></i><b>------</b><small>' + K.esc(s) + '</small></div>'; }).join('');
+  $('#t1').insertAdjacentHTML('afterbegin', K.EDGES); $('#t2').insertAdjacentHTML('afterbegin', K.EDGES);
+  $('#tcta').textContent = T.dm;
+  $$('#kit .dn').forEach(function (e) { e.textContent = Lk.name; }); $('#kit .dl').innerHTML = Lk.svg;
+  // pricing
+  var P = [[7, 3], [29, 12], [79, 40]], OC = [];
+  P.forEach(function (p, i) {
+    var n = i + 1, plan = $('#pn' + n).parentNode;
+    $('#pn' + n).textContent = T.plans[i];
+    $('.pre', plan).textContent = LANG === 'en' ? '€' : '';
+    $('.suf', plan).textContent = LANG === 'en' ? '' : ' €';
+    $('.per', plan).textContent = T.per;
+    OC.push(K.odo($('#o' + n), p[0]));
+    $('#rl' + n).textContent = T.reels.replace('{n}', p[1]);
+    $('#f' + n).innerHTML = T.feats[i].map(function (f) { return '<li>' + K.esc(f) + '</li>'; }).join('');
+  });
+  $('#pfr').innerHTML = K.EDGES; $('#need').textContent = T.need; $('#need').style.left = '264px';
+  $('#toks').innerHTML = T.toks.map(function (x, i) { return '<div class="tok"><span class="coins">' + (i === 0 ? '<span class="z"></span>' : i === 1 ? '<i></i>' : '<i></i><i></i>') + '</span><b>' + K.esc(x[0]) + '</b><small>' + K.esc(x[1]) + '</small></div>'; }).join('');
+  // end
+  $('#emark').innerHTML = K.MARK;
+  $('#etag').innerHTML = '<span id="tA"></span> <em id="tB"></em>';
+  var tA = K.words($('#tA'), T.tagA), tB = K.words($('#tB'), T.tagB);
+  $('#ecta').innerHTML = K.TG + '<span>' + K.esc(T.cta) + '</span>';
+  $('#esub').textContent = T.sub;
+
+  var tl = gsap.timeline({ paused: true });
+  tl.set({}, {}, B(64));
+  // hidden until their section
+  tl.set(['#b1', '#b2', '#b3', '#b4', '#b5', '#reel', '#kit', '#price', '#end'], { opacity: 0 }, 0);
+
+  // ---- the rail: the dot jumps on each bar, pulses on each beat
+  for (var bar = 0; bar < 16; bar++) {
+    tl.set('#rdot', { x: bar / 16 * RW }, B(bar * 4));
+    tl.set('#rail .fill', { scaleX: bar / 16 }, B(bar * 4));
+  }
+  tl.set('#rail .fill', { scaleX: 1 }, B(63.5));
+  tl.set('#rdot', { x: RW }, B(63.5));
+  for (var b = 0; b < 64; b++) tl.fromTo('#rdot', { scale: b % 4 ? 1.35 : 1.8 }, { scale: 1, duration: B(.6), ease: 'power2.out', immediateRender: false }, B(b));
+
+  function swapOut(sel, at) { tl.to(sel, { opacity: 0, y: -30, duration: B(.5), ease: 'power2.in' }, B(at)); }
+  function swapIn(sel, words, at) {
+    tl.fromTo(sel, { opacity: 0, y: 0 }, { opacity: 1, y: 0, duration: B(.3), immediateRender: false }, B(at));
+    tl.fromTo($(sel + ' .kick'), { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: B(.6), ease: 'power3.out' }, B(at));
+    K.rise(tl, words, at + .25, .25, 1);
+    var p = $(sel + ' p'); if (p) tl.fromTo(p, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: B(.8), ease: 'power3.out' }, B(at + 1.5));
+  }
+
+  // ---- intro (beats 0 to 8)
+  tl.fromTo('#brand', { opacity: 0 }, { opacity: 1, duration: B(1) }, 0);
+  tl.fromTo('#k0', { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: B(.6), ease: 'power3.out' }, 0);
+  K.rise(tl, W0, .5, .25, 1);
+  tl.fromTo('#chat', { y: 1000 }, { y: 0, duration: B(1), ease: 'power3.out' }, B(4));
+
+  // ---- 01 send clips (8 to 16)
+  swapOut('#b0', 7.5); swapIn('#b1', W[1], 8);
+  K.row(tl, '#r1', 8.6);
+  $$('#r1 .clips3 div').forEach(function (c, i) { tl.fromTo(c, { y: -70, opacity: 0, rotation: [-9, 7, -5][i] }, { y: 0, opacity: 1, rotation: [-3, 2, -1][i], duration: B(.7), ease: 'back.out(2)' }, B(9 + i - .3)); });
+  K.row(tl, '#r2', 12);
+  tl.fromTo($$('#vb i'), { scaleY: .1 }, { scaleY: 1, duration: B(.5), stagger: B(.08), ease: 'power2.out' }, B(12.3));
+
+  // ---- 02 say what you want (16 to 24)
+  swapOut('#b1', 15.5); swapIn('#b2', W[2], 16);
+  K.row(tl, '#r3', 16.5);
+  K.row(tl, '#r4', 17.5, .4);
+  [18, 19].forEach(function (x) { tl.fromTo($$('#dots i'), { y: 0, opacity: .45 }, { y: -7, opacity: 1, duration: B(.17), stagger: B(.17), yoyo: true, repeat: 1, ease: 'power1.out' }, B(x)); });
+  tl.to('#r4', { height: 0, opacity: 0, duration: B(.3) }, B(19.7));
+  K.row(tl, '#r5', 20);
+  $$('#chips .chip').forEach(function (c, i) { tl.fromTo(c, { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: B(.5), ease: 'back.out(3)' }, B(20.5 + i * .5)); });
+
+  // ---- 03 get Reels: the frame draws before the drop, the car lands on it (beat 24)
+  swapOut('#b2', 23.5); swapIn('#b3', W[3], 24);
+  tl.to('#chat', { y: 1000, duration: B(1), ease: 'power3.in' }, B(22));
+  tl.set('#reel', { opacity: 1 }, B(22.5));
+  K.frame(tl, '#gf', 22.5, .25);
+  tl.fromTo(M.dot, { opacity: 0 }, { opacity: 1, duration: B(.2) }, B(23.5));
+  for (var r = 8; r < 16; r++) M.step(tl, r, 16 + r, r === 8 ? 1.5 : 1.22);
+  tl.set($$('#mt .wave i').slice(0, 16), { backgroundColor: 'rgba(13,12,10,.3)' }, B(23.5));
+  var shots = $$('#ph .shot');
+  K.cut(tl, shots, 0, 24, 4, 1.16, 1);
+  K.cut(tl, shots, 1, 28, 2, 1.12, 1.03);
+  K.cut(tl, shots, 2, 30, 2, 1.12, 1.03);
+  tl.fromTo('#fl', { opacity: 1 }, { opacity: 0, duration: B(1), ease: 'power2.out', immediateRender: false }, B(24));
+  tl.fromTo('#gf', { scale: 1.045 }, { scale: 1, duration: B(.6), ease: 'back.out(3)', immediateRender: false }, B(24));
+  tl.fromTo('#glow', { scale: 1.3, opacity: 1 }, { scale: 1, opacity: .8, duration: B(2), ease: 'power2.out', immediateRender: false }, B(24));
+  tl.fromTo('#ec', { opacity: 0 }, { opacity: 1, duration: B(.5) }, B(32));
+  tl.fromTo($$('#ec > *'), { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: B(.6), stagger: B(.2), ease: 'power3.out' }, B(32));
+  $$('#qa .q').forEach(function (q, i) { tl.fromTo(q, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: B(.6), ease: 'back.out(2)' }, B(26 + i)); });
+  tl.fromTo('#okb', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: B(.6), ease: 'power3.out' }, B(29));
+  tl.fromTo('#okb', { scale: .92 }, { scale: 1, duration: B(.6), ease: 'back.out(3)', immediateRender: false }, B(34));
+  tl.fromTo('#okb i', { opacity: 0 }, { opacity: 1, duration: B(.3) }, B(34));
+
+  // ---- brand kit (36 to 48)
+  swapOut('#b3', 35.5); swapIn('#b4', W[4], 36);
+  tl.to('#reel', { opacity: 0, x: 60, duration: B(.5), ease: 'power2.in' }, B(35.5));
+  tl.fromTo('#kit', { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: B(.6), ease: 'power3.out', immediateRender: false }, B(36));
+  tl.fromTo('#scan', { x: 0, opacity: 1 }, { x: 300, duration: B(1.5), ease: 'power1.inOut', immediateRender: false }, B(37));
+  tl.set('#scan', { opacity: 0 }, B(38.5));
+  var cols = Lk.c, sws = $$('#sws .sw');
+  sws.forEach(function (s, i) {
+    var at = 38.5 + i;
+    tl.set($('i', s), { backgroundColor: cols[i] }, B(at));
+    tl.fromTo(s, { opacity: 0, scale: .3, y: -20 }, { opacity: 1, scale: 1, y: 0, duration: B(.8), ease: 'back.out(2.6)' }, B(at));
+    // the colour code settles letter by letter (fixed sequence, no randomness)
+    var b = $('b', s), hex = cols[i];
+    for (var j = 1; j <= 6; j++) tl.set(b, { textContent: hex.slice(0, j + 1) + '------'.slice(j) }, B(at + j / 7));
+  });
+  tl.fromTo('.tpl', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: B(.8), stagger: B(.5), ease: 'power3.out' }, B(41));
+  K.frame(tl, '#t1', 41.5, .25); K.frame(tl, '#t2', 42, .25);
+  // two more dealers: the colours move in one beat, the frame redraws in the new accent
+  [['lindner', 44], ['velvet', 46]].forEach(function (x) {
+    var L = K.LOGOS[x[0]], at = x[1];
+    tl.to('#kit', { '--d-bg': L.c[0], '--d-ink': L.c[1], '--d-acc': L.c[2], duration: B(1), ease: 'power2.inOut' }, B(at));
+    // sets, not callbacks: a seek never fires callbacks, a set is replayed exactly
+    tl.set($$('#kit .dn'), { textContent: L.name }, B(at));
+    tl.set($('#kit .dl'), { innerHTML: L.svg }, B(at));
+    tl.set('#logobox', { innerHTML: L.svg }, B(at));
+    sws.forEach(function (s, i) { tl.set($('i', s), { backgroundColor: L.c[i] }, B(at + .25 * i)); tl.set($('b', s), { textContent: L.c[i] }, B(at + .25 * i)); });
+    ['#t1', '#t2'].forEach(function (t) { tl.fromTo($$(t + ' .edges path'), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: B(.25), stagger: B(.25), ease: 'none', immediateRender: false }, B(at)); });
+  });
+
+  // ---- pricing (48 to 58)
+  swapOut('#b4', 47.5); swapIn('#b5', W[5], 48);
+  tl.to('#kit', { opacity: 0, x: 60, duration: B(.5), ease: 'power2.in' }, B(47.5));
+  tl.set('#price', { opacity: 1 }, B(48));
+  tl.fromTo('#price .plan', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: B(.8), stagger: B(.5), ease: 'power3.out' }, B(48.5));
+  OC.forEach(function (cs, i) { K.roll(tl, cs, 49 + i * .5, 1.5); });
+  tl.fromTo('#need', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: B(.6), ease: 'back.out(2)' }, B(51.5));
+  K.frame(tl, '#pfr', 52, .5);
+  tl.fromTo('#toks .tok', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: B(.6), stagger: B(.5), ease: 'power3.out' }, B(54.5));
+
+  // ---- the end (58 to 64)
+  tl.to(['#b5', '#price', '#brand'], { opacity: 0, duration: B(.5) }, B(57.5));
+  tl.set('#end', { opacity: 1 }, B(58));
+  tl.fromTo('#emark .mk', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: B(1), stagger: B(.25), ease: 'power2.inOut' }, B(58));
+  tl.fromTo('#ename', { opacity: 0, y: 30, letterSpacing: '.06em' }, { opacity: 1, y: 0, letterSpacing: '-.012em', duration: B(1.2), ease: 'power3.out' }, B(58.5));
+  K.rise(tl, tA, 59.5, .25, 1); K.rise(tl, tB, 60.5, .25, 1);
+  tl.fromTo('#ecta', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: B(.8), ease: 'back.out(2)' }, B(61.5));
+  tl.fromTo('#esub', { opacity: 0 }, { opacity: 1, duration: B(.8) }, B(62));
+  tl.fromTo('#glow', { left: 1410 }, { left: 960, duration: B(2), ease: 'power2.inOut', immediateRender: false }, B(57.5));
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines.explainer = tl;
+})();
+</script>
+</body>
+</html>
