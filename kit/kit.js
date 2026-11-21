@@ -8,7 +8,9 @@
   function $$(s, r) { return Array.prototype.slice.call(root(r).querySelectorAll(s)); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
-  var EDGES = '<svg class="edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M0 0H100"/><path pathLength="1" d="M100 0V100"/><path pathLength="1" d="M100 100H0"/><path pathLength="1" d="M0 100V0"/></svg><i class="cn tl"></i><i class="cn tr"></i><i class="cn br"></i><i class="cn bl"></i>';
+  var EDGES = '<i class="eg t"></i><i class="eg r"></i><i class="eg b"></i><i class="eg l"></i><i class="cn tl"></i><i class="cn tr"></i><i class="cn br"></i><i class="cn bl"></i>';
+  // edges are solid bars that grow (transforms only): top left-to-right, right down, bottom right-to-left, left up
+  var EDGE_FROM = [{ scaleX: 0 }, { scaleY: 0 }, { scaleX: 0 }, { scaleY: 0 }], EDGE_TO = [{ scaleX: 1 }, { scaleY: 1 }, { scaleX: 1 }, { scaleY: 1 }];
 
   // a heading split into words; each word rises from under its line
   function words(el, text) {
@@ -28,12 +30,12 @@
   }
   // the gallery frame draws one edge per `step` beats, then the corners click in
   function frame(tl, host, at, step) {
-    var ps = $$('.edges path', host);
-    ps.forEach(function (p, i) { tl.fromTo(p, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: B(step), ease: 'none' }, B(at + i * step)); });
+    var ps = $$('.eg', host);
+    ps.forEach(function (p, i) { tl.fromTo(p, EDGE_FROM[i], Object.assign({ duration: B(step), ease: 'none' }, EDGE_TO[i]), B(at + i * step)); });
     tl.fromTo($$('.cn', host), { scale: 0, rotation: 45 }, { scale: 1, rotation: 45, duration: B(.4), stagger: B(.05), ease: 'back.out(3)' }, B(at + 4 * step));
   }
   function frameDrawn(tl, host) {
-    tl.set($$('.edges path', host), { strokeDashoffset: 0 }, 0);
+    tl.set($$('.eg', host), { scaleX: 1, scaleY: 1 }, 0);
     tl.set($$('.cn', host), { scale: 1, rotation: 45 }, 0);
   }
   // wave + 16 ticks; returns { bars, dot, step(r) }
@@ -99,5 +101,5 @@
     velvet: { name: 'Velvet Cars', handle: '@velvetcars', c: ['#5A1726', '#F5E6DA', '#E8C4A6'],
       svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120"><rect width="200" height="120" rx="14" fill="#5A1726"/><path d="M76 26L100 80L124 26" fill="none" stroke="#E8C4A6" stroke-width="7"/><path d="M66 26H86M114 26H134" stroke="#E8C4A6" stroke-width="3"/><text x="100" y="106" text-anchor="middle" font-family="Bodoni Moda" font-style="italic" font-size="16" letter-spacing="2" fill="#F5E6DA">Velvet Cars</text></svg>' }
   };
-  window.KIT = { BPM: BPM, SPB: SPB, B: B, $: $, $$: $$, esc: esc, EDGES: EDGES, words: words, rise: rise, typed: typed, type: type, frame: frame, frameDrawn: frameDrawn, meter: meter, row: row, cut: cut, odo: odo, roll: roll, MARK: MARK, CHK: CHK, TG: TG, LOGOS: LOGOS };
+  window.KIT = { BPM: BPM, SPB: SPB, B: B, $: $, $$: $$, esc: esc, EDGES: EDGES, words: words, rise: rise, typed: typed, type: type, frame: frame, frameDrawn: frameDrawn, EDGE_FROM: EDGE_FROM, EDGE_TO: EDGE_TO, meter: meter, row: row, cut: cut, odo: odo, roll: roll, MARK: MARK, CHK: CHK, TG: TG, LOGOS: LOGOS };
 })();

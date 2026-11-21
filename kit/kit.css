@@ -16,15 +16,18 @@ html, body { background: var(--cream); overflow: hidden; }
 
 /* the gold gallery frame: four edges, four diamond corners */
 .gframe { position: absolute; }
-.gframe > .edges { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.edges path { fill: none; stroke: var(--gold-hi); stroke-width: 3; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.eg { position: absolute; background: var(--gold-hi); }
+.eg.t { left: 0; right: 0; top: -1px; height: 3px; transform-origin: 0 50%; transform: scaleX(0); }
+.eg.r { top: 0; bottom: 0; right: -1px; width: 3px; transform-origin: 50% 0; transform: scaleY(0); }
+.eg.b { left: 0; right: 0; bottom: -1px; height: 3px; transform-origin: 100% 50%; transform: scaleX(0); }
+.eg.l { top: 0; bottom: 0; left: -1px; width: 3px; transform-origin: 50% 100%; transform: scaleY(0); }
 .cn { position: absolute; width: 16px; height: 16px; border: 2px solid var(--gold-hi); background: var(--ink); }
 .cn.tl { left: -8px; top: -8px; } .cn.tr { right: -8px; top: -8px; } .cn.br { right: -8px; bottom: -8px; } .cn.bl { left: -8px; bottom: -8px; }
 
 /* a Reel screen inside a frame */
 .phone { position: absolute; overflow: hidden; background: #050505; border-radius: 10px; }
 .shot { position: absolute; inset: 0; overflow: hidden; opacity: 0; }
-.shot img { position: absolute; left: 0; bottom: 0; width: 100%; height: 116%; object-fit: cover; object-position: center bottom; filter: contrast(1.06) saturate(1.05) sepia(.05); }
+.shot img { position: absolute; left: 0; bottom: 0; width: 100%; height: 128%; object-fit: cover; object-position: center bottom; filter: contrast(1.06) saturate(1.05) sepia(.05); }
 .flash { position: absolute; inset: 0; opacity: 0; background: radial-gradient(circle at 50% 55%, rgba(255,236,190,.95), rgba(217,179,106,.6) 40%, rgba(217,179,106,0) 75%); mix-blend-mode: screen; z-index: 6; }
 .brandtag { position: absolute; left: 0; right: 0; text-align: center; font-weight: 700; text-transform: uppercase; color: var(--d-acc); z-index: 5; }
 .pill { position: absolute; left: 50%; white-space: nowrap; font-weight: 700; color: #fff; background: rgba(10,9,7,.74); border: 2px solid var(--d-acc); border-radius: 999px; z-index: 5; }

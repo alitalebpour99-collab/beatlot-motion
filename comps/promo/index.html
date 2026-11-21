@@ -33,7 +33,7 @@
 .who small { display: flex; align-items: center; gap: 10px; font-size: 26px; color: var(--mute-d); }
 .who small i { width: 11px; height: 11px; border-radius: 50%; background: #7fbf8a; }
 #body { position: absolute; left: 0; right: 0; top: 132px; bottom: 150px; padding: 26px 30px; display: flex; flex-direction: column; justify-content: flex-end; gap: 22px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 90px); mask-image: linear-gradient(180deg, transparent 0, #000 90px); }
-.msg { font-size: 34px; line-height: 1.45; padding: 20px 28px; border-radius: 36px; }
+.msg { font-size: 40px; line-height: 1.4; padding: 22px 30px; border-radius: 38px; }
 .me { border-bottom-right-radius: 12px; }
 .bot { border-bottom-left-radius: 12px; }
 .clips3 { display: flex; gap: 14px; padding: 14px; }
@@ -42,7 +42,7 @@
 .typing { gap: 10px; padding: 30px 32px; }
 .typing i { width: 14px; height: 14px; }
 .chips { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
-.chip { font-size: 27px; padding: 6px 20px; }
+.chip { font-size: 30px; padding: 6px 20px; }
 .reelmsg { max-width: 100%; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 22px; padding: 30px 20px 26px; }
 #gf { position: relative; width: 570px; height: 1013px; }
 #ph { left: 10px; top: 10px; right: 10px; bottom: 10px; }
@@ -218,6 +218,7 @@
   tl.fromTo(M.dot, { opacity: 0 }, { opacity: 1, duration: B(.3) }, B(11.5));
   // 16 beats of Reel, beat 12 to 28; the car arrives on the drop (Reel beat 8 = beat 20 = the song's drop)
   var R0 = 12, shots = $$('#ph .shot');
+  tl.set(shots[0], { opacity: 1 }, B(11));
   for (var r = 0; r < 16; r++) M.step(tl, r, R0 + r, r === 8 ? 1.5 : 1.22);
   K.cut(tl, shots, 0, R0 + 0, 2, 1.22, 1.1);
   K.cut(tl, shots, 1, R0 + 2, 2, 1.2, 1.08);
@@ -244,7 +245,7 @@
   tl.fromTo('#end', { opacity: 0 }, { opacity: 1, duration: B(.4) }, B(32.4));
   tl.fromTo('#emark .mk', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: B(1), stagger: B(.25), ease: 'power2.inOut' }, B(32.5));
   tl.fromTo('#emark .mkd', { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, transformOrigin: '50% 50%', duration: B(.5), ease: 'back.out(3)' }, B(33.5));
-  tl.fromTo('#ename', { opacity: 0, y: 40, letterSpacing: '.06em' }, { opacity: 1, y: 0, letterSpacing: '-.012em', duration: B(1.2), ease: 'power3.out' }, B(33));
+  tl.fromTo('#ename', { opacity: 0, y: 40, scale: 1.05 }, { opacity: 1, y: 0, scale: 1, duration: B(1.2), ease: 'power3.out' }, B(33));
   tl.fromTo(EM.dot, { opacity: 0 }, { opacity: 1, duration: B(.2) }, B(33));
   for (var e = 0; e < 7; e++) EM.step(tl, e, 33 + e, false);
   K.rise(tl, tA, 34, .25, 1); K.rise(tl, tB, 35, .25, 1);
