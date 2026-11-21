@@ -45,6 +45,14 @@ jobs:
           d=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")
           ffprobe -v error -show_entries stream=width,height,r_frame_rate,nb_frames -of compact "$f" | tee out/${{ matrix.target }}-probe.txt
           ffmpeg -v error -i "$f" -vf "fps=12/$d,scale=-2:420,tile=12x1" -frames:v 1 -q:v 4 -y out/${{ matrix.target }}-sheet.jpg
+      - name: Web copies of the loop (site hero / OG)
+        if: matrix.target == 'loop'
+        run: |
+          ffmpeg -v error -i out/loop.mp4 -vf scale=720:720 -c:v libx264 -profile:v high -pix_fmt yuv420p -crf 25 -preset slow -movflags +faststart -an -y out/loop-720.mp4
+          ffmpeg -v error -i out/loop.mp4 -vf scale=720:720 -c:v libvpx-vp9 -b:v 0 -crf 38 -row-mt 1 -an -y out/loop-720.webm
+          ffmpeg -v error -ss 0 -i out/loop.mp4 -frames:v 1 -vf scale=720:720 -q:v 4 -y out/loop-poster.jpg
+          ffmpeg -v error -ss 4.6 -i out/loop.mp4 -frames:v 1 -vf "scale=630:630,pad=1200:630:285:0:0x0D0C0A" -q:v 4 -y out/og.jpg
+          ls -la out
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target }}
