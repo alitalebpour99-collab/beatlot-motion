@@ -8,8 +8,8 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { background: var(--cream); overflow: hidden; }
-#root { position: relative; overflow: hidden; isolation: isolate; font-family: 'Manrope', system-ui, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
-.disp { font-family: 'Bodoni Moda', 'Didot', serif; font-weight: 500; letter-spacing: -.012em; }
+#root { position: relative; overflow: hidden; isolation: isolate; font-family: 'Manrope', sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+.disp { font-family: 'Bodoni Moda', serif; font-weight: 500; letter-spacing: -.012em; }
 .abs { position: absolute; }
 .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
 .w > span { display: inline-block; }

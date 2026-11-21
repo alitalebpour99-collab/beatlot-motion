@@ -5,7 +5,7 @@
   function B(n) { return n * SPB; }
   function root(r) { return typeof r === 'string' ? document.querySelector(r) : (r || document); }
   function $(s, r) { return root(r).querySelector(s); }
-  function $(s, r) { return Array.prototype.slice.call(root(r).querySelectorAll(s)); }
+  function $$(s, r) { return Array.prototype.slice.call(root(r).querySelectorAll(s)); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
   var EDGES = '<svg class="edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M0 0H100"/><path pathLength="1" d="M100 0V100"/><path pathLength="1" d="M100 100H0"/><path pathLength="1" d="M0 100V0"/></svg><i class="cn tl"></i><i class="cn tr"></i><i class="cn br"></i><i class="cn bl"></i>';
@@ -93,11 +93,11 @@
   var TG = '<svg viewBox="0 0 24 24"><path d="M21.5 4.3L2.9 11.5c-1 .4-1 1.6.1 1.9l4.6 1.4 1.8 5.5c.3.8 1.3 1 1.9.4l2.6-2.4 4.7 3.5c.7.5 1.7.1 1.9-.7l3-14c.2-1-.8-1.8-1.8-1.4zM9.6 14.4l8.4-7.5-6.9 8.7-.3 3-1.2-4.2z" fill="currentColor"/></svg>';
   var LOGOS = {
     kestrel: { name: 'Kestrel Motors', handle: '@kestrel.motors', c: ['#121110', '#F1E7D6', '#C9A24A'],
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120"><rect width="200" height="120" rx="14" fill="#121110"/><path d="M52 74C78 42 112 30 150 33C123 41 106 51 97 66C114 59 131 59 143 63C120 67 101 76 88 92Z" fill="#C9A24A"/><text x="100" y="109" text-anchor="middle" font-family="Georgia,serif" font-size="12.5" letter-spacing="4" fill="#F1E7D6">KESTREL MOTORS</text></svg>' },
+      svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120"><rect width="200" height="120" rx="14" fill="#121110"/><path d="M52 74C78 42 112 30 150 33C123 41 106 51 97 66C114 59 131 59 143 63C120 67 101 76 88 92Z" fill="#C9A24A"/><text x="100" y="109" text-anchor="middle" font-family="Bodoni Moda" font-size="12.5" letter-spacing="4" fill="#F1E7D6">KESTREL MOTORS</text></svg>' },
     lindner: { name: 'Autohaus Lindner', handle: '@autohaus.lindner', c: ['#1F4A3A', '#F2EBDC', '#C2A15F'],
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120"><rect width="200" height="120" rx="14" fill="#F2EBDC"/><circle cx="100" cy="48" r="30" fill="#1F4A3A"/><path d="M100 27C117 38 117 60 100 71C83 60 83 38 100 27Z" fill="#C2A15F"/><path d="M100 33V70" stroke="#1F4A3A" stroke-width="2"/><text x="100" y="104" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-weight="700" font-size="13" letter-spacing="3" fill="#1F4A3A">AUTOHAUS LINDNER</text></svg>' },
+      svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120"><rect width="200" height="120" rx="14" fill="#F2EBDC"/><circle cx="100" cy="48" r="30" fill="#1F4A3A"/><path d="M100 27C117 38 117 60 100 71C83 60 83 38 100 27Z" fill="#C2A15F"/><path d="M100 33V70" stroke="#1F4A3A" stroke-width="2"/><text x="100" y="104" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="13" letter-spacing="3" fill="#1F4A3A">AUTOHAUS LINDNER</text></svg>' },
     velvet: { name: 'Velvet Cars', handle: '@velvetcars', c: ['#5A1726', '#F5E6DA', '#E8C4A6'],
-      svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120"><rect width="200" height="120" rx="14" fill="#5A1726"/><path d="M76 26L100 80L124 26" fill="none" stroke="#E8C4A6" stroke-width="7"/><path d="M66 26H86M114 26H134" stroke="#E8C4A6" stroke-width="3"/><text x="100" y="106" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="16" letter-spacing="2" fill="#F5E6DA">Velvet Cars</text></svg>' }
+      svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120"><rect width="200" height="120" rx="14" fill="#5A1726"/><path d="M76 26L100 80L124 26" fill="none" stroke="#E8C4A6" stroke-width="7"/><path d="M66 26H86M114 26H134" stroke="#E8C4A6" stroke-width="3"/><text x="100" y="106" text-anchor="middle" font-family="Bodoni Moda" font-style="italic" font-size="16" letter-spacing="2" fill="#F5E6DA">Velvet Cars</text></svg>' }
   };
   window.KIT = { BPM: BPM, SPB: SPB, B: B, $: $, $$: $$, esc: esc, EDGES: EDGES, words: words, rise: rise, typed: typed, type: type, frame: frame, frameDrawn: frameDrawn, meter: meter, row: row, cut: cut, odo: odo, roll: roll, MARK: MARK, CHK: CHK, TG: TG, LOGOS: LOGOS };
 })();
