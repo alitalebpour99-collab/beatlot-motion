@@ -3,8 +3,9 @@
 (function () {
   var BPM = 126, SPB = 60 / BPM;
   function B(n) { return n * SPB; }
-  function $(s, r) { return (r || document).querySelector(s); }
-  function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function root(r) { return typeof r === 'string' ? document.querySelector(r) : (r || document); }
+  function $(s, r) { return root(r).querySelector(s); }
+  function $(s, r) { return Array.prototype.slice.call(root(r).querySelectorAll(s)); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
   var EDGES = '<svg class="edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M0 0H100"/><path pathLength="1" d="M100 0V100"/><path pathLength="1" d="M100 100H0"/><path pathLength="1" d="M0 100V0"/></svg><i class="cn tl"></i><i class="cn tr"></i><i class="cn br"></i><i class="cn bl"></i>';
